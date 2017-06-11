@@ -13,6 +13,7 @@ Therefore, I revised [the tutorial](https://github.com/Microsoft/CNTK/tree/maste
 To run this project, please take a look at [this document](https://docs.microsoft.com/en-us/cognitive-toolkit/Evaluate-a-model-in-an-Azure-WebApi). The procedure is same as the document.
 
 This sample code resolves these issues.
+
 https://github.com/Microsoft/CNTK/issues/1933
 https://github.com/Microsoft/CNTK/issues/1934
 
