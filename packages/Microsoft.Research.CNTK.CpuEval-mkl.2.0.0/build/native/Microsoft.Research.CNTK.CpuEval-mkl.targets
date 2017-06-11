@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <CNTKSupported>false</CNTKSupported>
+    <CNTKSupported Condition="'$(Platform.ToLower())' == 'x64' And '$(PlatformToolset.ToLower())' == 'v140'">true</CNTKSupported>
+    <CNTKBuild>
+    </CNTKBuild>
+    <CNTKBuild Condition="($(Configuration.ToLower().IndexOf('debug')) &gt; -1)">Debug</CNTKBuild>
+    <CNTKBuild Condition="$(Configuration.ToLower().IndexOf('debug')) == -1">Release</CNTKBuild>
+    <CNTKPackageRoot>$(MSBuildThisFileDirectory)..\..\</CNTKPackageRoot>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="$(CNTKSupported)">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(CNTKPackageRoot)build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(CNTKPackageRoot)build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="$(CNTKSupported) And '$(CNTKBuild)' == 'Debug'">
+    <Link>
+      <AdditionalDependencies>$(CNTKPackageRoot)build\native\lib\x64\$(CNTKBuild)\Cntk.Eval-2.0d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="$(CNTKSupported) And '$(CNTKBuild)' == 'Release'">
+    <Link>
+      <AdditionalDependencies>$(CNTKPackageRoot)build\native\lib\x64\$(CNTKBuild)\Cntk.Eval-2.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Target Name="cntk_redist_AfterBuild_Debug" Condition="$(CNTKSupported) And '$(CNTKBuild)' == 'Debug'" AfterTargets="AfterBuild">
+    <Copy SourceFiles="$(CNTKPackageRoot)support\x64\Dependency\libiomp5md.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(CNTKPackageRoot)support\x64\Dependency\mkl_cntk_p.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(CNTKPackageRoot)support\x64\$(CNTKBuild)\Cntk.Eval-2.0d.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(CNTKPackageRoot)support\x64\$(CNTKBuild)\Cntk.Math-2.0d.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="cntk_redist_AfterBuild_Release" Condition="$(CNTKSupported) And '$(CNTKBuild)' == 'Release'" AfterTargets="AfterBuild">
+    <Copy SourceFiles="$(CNTKPackageRoot)support\x64\Dependency\libiomp5md.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(CNTKPackageRoot)support\x64\Dependency\mkl_cntk_p.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(CNTKPackageRoot)support\x64\$(CNTKBuild)\Cntk.Eval-2.0.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(CNTKPackageRoot)support\x64\$(CNTKBuild)\Cntk.Math-2.0.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
