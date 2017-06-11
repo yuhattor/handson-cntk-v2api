@@ -1,3 +1,4 @@
+
 # CNTK Web Deploy Sample
 
 You can deploy CNTK evaluation API solution with models trained via Python.
@@ -13,9 +14,8 @@ Therefore, I revised [the tutorial](https://github.com/Microsoft/CNTK/tree/maste
 To run this project, please take a look at [this document](https://docs.microsoft.com/en-us/cognitive-toolkit/Evaluate-a-model-in-an-Azure-WebApi). The procedure is same as the document.
 
 This sample code resolves these issues.
-
-https://github.com/Microsoft/CNTK/issues/1933
-https://github.com/Microsoft/CNTK/issues/1934
+[Error while using TransferLearning model for evaluation (deploying model in Azure) #1933](https://github.com/Microsoft/CNTK/issues/1933)
+[How to deploy TransferLearning.model ? #1934](https://github.com/Microsoft/CNTK/issues/1934)
 
 Perhaps, the tutrial will be updated in the future. However CNTK repository has over 700 issues now, and I suppose the priority of the tutorial project may be low.
 I hope this code helps someone who want to deploy API solution with models trained via Python.
