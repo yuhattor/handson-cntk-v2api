@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,51 +10,27 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Drawing;
 using CNTK;
+using Newtonsoft.Json.Linq;
 
 namespace CNTKAzureTutorial01.Controllers
 {
     public class ValuesController : ApiController
     {
         // GET api/values
-        [SwaggerOperation("GetAll")]
-        public async Task<string> Get()
+        [SwaggerOperation("Post")]
+        public async Task<string> Post()
         {
-            return await this.EvaluateCustomDNN("http://3.bp.blogspot.com/-Mwr4UZALiA0/TWBt-3vFR8I/AAAAAAAAA4Y/0tXjI-NhVPM/s1600/j0262568.jpg");
+            string json = Request.Content.ReadAsStringAsync().Result;
+            JObject requestBody = JObject.Parse(json);
+            if (requestBody["url"] != null)
+            {
+                return await this.EvaluateCustomDNN((string)requestBody["url"]);
+            }
+            else
+            {
+                return "Please post target image url";
+            }
         }
-
-        // GET api/values/5
-        [SwaggerOperation("GetById")]
-        [SwaggerResponse(HttpStatusCode.OK)]
-        [SwaggerResponse(HttpStatusCode.NotFound)]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
-        [SwaggerOperation("Create")]
-        [SwaggerResponse(HttpStatusCode.Created)]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/values/5
-        [SwaggerOperation("Update")]
-        [SwaggerResponse(HttpStatusCode.OK)]
-        [SwaggerResponse(HttpStatusCode.NotFound)]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [SwaggerOperation("Delete")]
-        [SwaggerResponse(HttpStatusCode.OK)]
-        [SwaggerResponse(HttpStatusCode.NotFound)]
-        public void Delete(int id)
-        {
-        }
-
-
 
         public async Task<string> EvaluateCustomDNN(string imageUrl)
         //public static void EvaluationSingleImage(DeviceDescriptor device)
@@ -103,15 +79,14 @@ namespace CNTKAzureTutorial01.Controllers
                 // Create ouput data map. Using null as Value to indicate using system allocated memory.
                 // Alternatively, create a Value object and add it to the data map.
                 outputDataMap.Add(outputVar, null);
-                
+
                 // Start evaluation on the device
                 modelFunc.Evaluate(inputDataMap, outputDataMap, device);
 
                 // Get evaluate result as dense output
                 var outputVal = outputDataMap[outputVar];
                 var outputData = outputVal.GetDenseData<float>(outputVar);
-                string json = JsonConvert.SerializeObject(outputData);
-                //return new []{ json };
+                string json = JsonConvert.SerializeObject(outputData);
                 return json;
             }
             catch (Exception ex)
